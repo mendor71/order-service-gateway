@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: order-service-gateway
+  webflux:
+    base-path: /${spring.application.name}
+
+rest:
+  client:
+    order-service:
+      host: http://localhost:8080
+      uri: /order-service/order
+      readTimeout: 60s
+      connectionTimeout: 10s
+
+server:
+  port: 8081
