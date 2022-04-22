@@ -28,6 +28,8 @@ val coroutinesVersion = "1.6.0"
 dependencies {
     implementation(group = "com.mendor71", name = "order-service-lib", version = "0.1.0")
 
+    implementation(group = "org.springframework.kafka", name = "spring-kafka")
+
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-webflux")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-actuator")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-test")

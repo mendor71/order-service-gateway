@@ -4,6 +4,13 @@ spring:
   webflux:
     base-path: /${spring.application.name}
 
+kafka:
+  bootstrap-address: 127.0.0.1:9092
+
+audit:
+  topic:
+    order-service-log
+
 rest:
   client:
     order-service:

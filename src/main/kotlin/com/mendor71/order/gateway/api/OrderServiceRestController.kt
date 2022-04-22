@@ -1,6 +1,8 @@
 package com.mendor71.order.gateway.api
 
+import com.mendor71.order.gateway.OrderServiceAsyncWebClient
 import com.mendor71.order.gateway.OrderServiceGateway
+import com.mendor71.order.gateway.ServiceResult
 import com.mendor71.order.model.transfer.TransferOrder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -17,7 +19,7 @@ class OrderServiceRestController(
 ) {
 
     @PostMapping("/create")
-    suspend fun createOrder(@RequestBody order: TransferOrder): Long = withContext(dispatcher) {
-        orderServiceGateway.createOrder(order)
+    suspend fun createOrder(@RequestBody order: TransferOrder): ServiceResult = withContext(dispatcher) {
+        orderServiceGateway.handleRequest(order)
     }
 }
