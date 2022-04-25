@@ -14,7 +14,7 @@ import org.springframework.kafka.core.ProducerFactory
 
 @Configuration
 class KafkaConfiguration {
-    @Value(value = "\${kafka.bootstrap-address}")
+    @Value(value = "\${audit.kafka.bootstrap-address}")
     private lateinit var bootstrapAddress: String
 
     @Bean

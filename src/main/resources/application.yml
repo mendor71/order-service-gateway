@@ -4,18 +4,20 @@ spring:
   webflux:
     base-path: /${spring.application.name}
 
-kafka:
-  bootstrap-address: 127.0.0.1:9092
-
 audit:
+  enabled: false
   topic:
     order-service-log
+  kafka:
+    bootstrap-address: 127.0.0.1:9092
 
 rest:
   client:
     order-service:
       host: http://localhost:8080
-      uri: /order-service/order
+      uris:
+        create: /order-service/order
+        get: /order-service/order/{ordId}
       readTimeout: 60s
       connectionTimeout: 10s
 

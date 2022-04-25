@@ -26,7 +26,7 @@ application {
 val coroutinesVersion = "1.6.0"
 
 dependencies {
-    implementation(group = "com.mendor71", name = "order-service-lib", version = "0.1.0")
+    implementation(group = "com.mendor71", name = "order-service-lib", version = "0.3.0")
 
     implementation(group = "org.springframework.kafka", name = "spring-kafka")
 

@@ -1,20 +1,32 @@
 package com.mendor71.order.gateway
 
 import com.fasterxml.jackson.databind.ObjectWriter
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 
 @Component
-class KafkaAuditService<T, R>(
+@ConditionalOnProperty(prefix = "audit", name = ["enabled"], havingValue = "true")
+class KafkaAuditService(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     private val objectWriter: ObjectWriter
-) {
-    suspend fun handleWithAudit(topic: String, request: T, handler: suspend (T) -> R): ServiceResult {
-        kafkaTemplate.send(topic, objectWriter.writeValueAsString(request))
-        return try {
-            ServiceResult.ok(handler(request))
-        } catch (e: Exception) {
-            ServiceResult.error(e.message ?: "something went wrong")
-        }
-    }
+) : IAuditService {
+    @Value("\${audit.topic}")
+    private lateinit var auditTopic: String
+    override val logger: Logger = LoggerFactory.getLogger(this::class.simpleName)
+
+    override fun logMessage(auditPoint: String, message: Any) =
+        kafkaTemplate.send(auditTopic, objectWriter.writeValueAsString(AuditMessage(auditPoint, message)))
+            .addCallback({ result ->
+                logger.debug(
+                    "Sent message=[" + message + "] with offset=[" + result.recordMetadata.offset() + "]"
+                )
+            }, { ex ->
+                logger.debug(
+                    "Unable to send message=[" + message + "] due to : " + ex.message
+                )
+            })
 }
