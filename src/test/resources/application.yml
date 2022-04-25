@@ -1,0 +1,14 @@
+audit:
+  enabled: false
+  topic:
+    order-service-log
+  kafka:
+    bootstrap-address: 127.0.0.1:9092
+
+spring:
+  main:
+    lazy-initialization: true
+
+logging:
+  level:
+    root: DEBUG

@@ -19,12 +19,12 @@ class OrderServiceRestController(
     @PostMapping("/create")
     suspend fun createOrder(@RequestBody order: TransferOrder): GatewayResponse =
         withContext(dispatcher) {
-            createGateway.handleCreateRequest(order)
+            createGateway.handleRequest(order)
         }
 
     @PostMapping("/get/{ordId}")
     suspend fun getOrder(@PathVariable ordId: Long): GatewayResponse =
         withContext(dispatcher) {
-            getGateway.handleCreateRequest(ordId)
+            getGateway.handleRequest(ordId)
         }
 }

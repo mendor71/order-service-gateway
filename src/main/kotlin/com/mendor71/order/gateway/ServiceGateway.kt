@@ -20,5 +20,5 @@ interface ServiceGateway<T> {
         return GatewayRequest(requestId, requestType, request)
     }
 
-    suspend fun handleCreateRequest(request: T): GatewayResponse
+    suspend fun handleRequest(request: T): GatewayResponse
 }

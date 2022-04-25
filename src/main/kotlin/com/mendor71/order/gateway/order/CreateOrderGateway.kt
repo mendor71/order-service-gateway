@@ -17,7 +17,7 @@ class CreateOrderGateway(
 ) : ServiceGateway<TransferOrder> {
     override val auditPoint = "CREATE_ORDER"
 
-    override suspend fun handleCreateRequest(request: TransferOrder): GatewayResponse = coroutineScope {
+    override suspend fun handleRequest(request: TransferOrder): GatewayResponse = coroutineScope {
         orderRequestHandler.handleWithAudit(
             auditPoint,
             createGatewayRequest(

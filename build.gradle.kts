@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.12"
+    id("org.springframework.boot") version "2.6.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
 
     val kotlinVersion = "1.6.10"
@@ -47,4 +47,12 @@ dependencies {
     testImplementation(group = "io.kotest", name = "kotest-property", version = "5.1.0")
     testImplementation(group = "io.kotest.extensions", name = "kotest-extensions-spring", version = "1.1.0")
     testImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version = coroutinesVersion)
+    testImplementation(group = "org.springframework.kafka", name = "spring-kafka-test")
+    testImplementation(group = "org.testcontainers", name = "kafka", version = "1.15.3")
+}
+
+tasks {
+    test {
+        useJUnitPlatform()
+    }
 }

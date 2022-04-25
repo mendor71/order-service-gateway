@@ -16,11 +16,12 @@ class GetOrderGateway(
 ) : ServiceGateway<Long> {
     override val auditPoint: String = "GET_ORDER"
 
-    override suspend fun handleCreateRequest(request: Long): GatewayResponse = coroutineScope {
+    override suspend fun handleRequest(request: Long): GatewayResponse = coroutineScope {
         orderRequestHandler.handleWithAudit(
             auditPoint,
             createGatewayRequest(
-                GatewayRequestType.GET_ORDER, request
+                GatewayRequestType.GET_ORDER,
+                request
             ),
             orderServiceClient::getOrder
         )
