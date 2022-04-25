@@ -49,6 +49,9 @@ dependencies {
     testImplementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version = coroutinesVersion)
     testImplementation(group = "org.springframework.kafka", name = "spring-kafka-test")
     testImplementation(group = "org.testcontainers", name = "kafka", version = "1.15.3")
+
+    testImplementation(group = "com.squareup.okhttp3", name = "okhttp", version = "4.9.1")
+    testImplementation(group = "com.squareup.okhttp3", name = "mockwebserver", version = "4.9.1")
 }
 
 tasks {

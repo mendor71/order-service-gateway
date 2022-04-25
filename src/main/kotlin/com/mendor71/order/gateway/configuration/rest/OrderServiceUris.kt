@@ -1,4 +1,4 @@
-package com.mendor71.order.gateway.configuration
+package com.mendor71.order.gateway.configuration.rest
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component

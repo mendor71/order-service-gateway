@@ -20,7 +20,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 @Configuration
-class ContextConfiguration {
+class KafkaAuditServiceContextConfiguration {
     @Value("\${audit.topic}")
     private lateinit var auditTopic: String
 

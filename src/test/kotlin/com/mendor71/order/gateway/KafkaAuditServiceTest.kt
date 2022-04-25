@@ -1,6 +1,6 @@
 package com.mendor71.order.gateway
 
-import com.mendor71.order.gateway.testconfiguration.ContextConfiguration
+import com.mendor71.order.gateway.testconfiguration.KafkaAuditServiceContextConfiguration
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.assertj.core.api.Assertions.assertThat
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
  * May take several minutes on first run to load kafka testcontainer docker image
  * */
 @DirtiesContext
-@SpringBootTest(classes = [ContextConfiguration::class])
+@SpringBootTest(classes = [KafkaAuditServiceContextConfiguration::class])
 class KafkaAuditServiceTest {
     @Autowired
     lateinit var kafkaAuditService: KafkaAuditService
