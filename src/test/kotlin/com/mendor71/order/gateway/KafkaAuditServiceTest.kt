@@ -12,6 +12,11 @@ import org.springframework.test.annotation.DirtiesContext
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
+
+/**
+ * WARNING!
+ * May take several minutes on first run to load kafka testcontainer docker image
+ * */
 @DirtiesContext
 @SpringBootTest(classes = [ContextConfiguration::class])
 class KafkaAuditServiceTest {
