@@ -26,7 +26,7 @@ application {
 val coroutinesVersion = "1.6.0"
 
 dependencies {
-    implementation(group = "com.mendor71", name = "order-service-lib", version = "0.3.0")
+    implementation(group = "com.mendor71", name = "order-service-lib", version = "0.4.0")
 
     implementation(group = "org.springframework.kafka", name = "spring-kafka")
 
@@ -34,6 +34,7 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-actuator")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin")
+    implementation(group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310")
 
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = coroutinesVersion)
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version = coroutinesVersion)

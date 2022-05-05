@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component
 class DummyAuditService(
     private val objectWriter: ObjectWriter
 ) : IAuditService {
+
     override val logger: Logger = LoggerFactory.getLogger(DummyAuditService::class.simpleName)
 
     override fun logMessage(auditPoint: String, message: Any) {

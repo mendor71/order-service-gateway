@@ -3,6 +3,7 @@ package com.mendor71.order.gateway.order
 import com.mendor71.order.gateway.GatewayRequestHandler
 import com.mendor71.order.gateway.OrderServiceAsyncWebClient
 import com.mendor71.order.gateway.ServiceGateway
+import com.mendor71.order.gateway.utils.ApplicationDate
 import com.mendor71.order.model.gateway.GatewayRequestType
 import com.mendor71.order.model.gateway.GatewayResponse
 import com.mendor71.order.model.gateway.order.GetOrderResponse
@@ -11,9 +12,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class GetOrderGateway(
+    applicationDate: ApplicationDate,
     private val orderServiceClient: OrderServiceAsyncWebClient,
     private val orderRequestHandler: GatewayRequestHandler<Long, GetOrderResponse>
-) : ServiceGateway<Long> {
+) : ServiceGateway<Long>(applicationDate) {
     override val auditPoint: String = "GET_ORDER"
 
     override suspend fun handleRequest(request: Long): GatewayResponse = coroutineScope {

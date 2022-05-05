@@ -2,6 +2,8 @@ package com.mendor71.order.gateway.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
@@ -32,5 +34,7 @@ class KafkaConfiguration {
     }
 
     @Bean
-    fun objectWriter(): ObjectWriter = ObjectMapper().writer()
+    fun objectWriter(): ObjectWriter = ObjectMapper()
+        .registerModule(JavaTimeModule())
+        .writer()
 }

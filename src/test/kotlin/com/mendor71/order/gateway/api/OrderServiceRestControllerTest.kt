@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.mendor71.order.gateway.order.CreateOrderGateway
 import com.mendor71.order.gateway.order.GetOrderGateway
 import com.mendor71.order.gateway.testconfiguration.RestControllerTestConfiguration
+import com.mendor71.order.gateway.utils.ApplicationDate
 import com.mendor71.order.model.dto.PositionDto
 import com.mendor71.order.model.dto.SalePointDto
 import com.mendor71.order.model.dto.StatusDto
@@ -14,15 +15,12 @@ import com.mendor71.order.model.gateway.order.CreateOrderResponse
 import com.mendor71.order.model.gateway.order.GetOrderResponse
 import com.mendor71.order.model.transfer.TransferOrder
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
-import kotlinx.coroutines.CoroutineDispatcher
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.test.web.reactive.server.expectBody
 
 @Import(RestControllerTestConfiguration::class)
 @WebFluxTest(OrderServiceRestController::class)
@@ -30,7 +28,8 @@ import org.springframework.test.web.reactive.server.expectBody
 class OrderServiceRestControllerTest(
     private val webTestClient: WebTestClient,
     private val createGateway: CreateOrderGateway,
-    private val getGateway: GetOrderGateway
+    private val getGateway: GetOrderGateway,
+    private val applicationDate: ApplicationDate
 ) : StringSpec({
 
     val objectWriter = ObjectMapper().writer()
@@ -46,6 +45,7 @@ class OrderServiceRestControllerTest(
     "createOrder" {
         val response = GatewayResponse(
             "123",
+            applicationDate.offsetDateTime(),
             GatewayRequestType.CREATE_ORDER,
             ServiceStatus.OK,
             CreateOrderResponse(1),
@@ -68,6 +68,7 @@ class OrderServiceRestControllerTest(
     "getOrder" {
         val response = GatewayResponse(
             "123",
+            applicationDate.offsetDateTime(),
             GatewayRequestType.GET_ORDER,
             ServiceStatus.OK,
             GetOrderResponse(transferOrder),

@@ -2,6 +2,7 @@ package com.mendor71.order.gateway.testconfiguration
 
 import com.mendor71.order.gateway.order.CreateOrderGateway
 import com.mendor71.order.gateway.order.GetOrderGateway
+import com.mendor71.order.gateway.utils.ApplicationDate
 import io.mockk.mockk
 import kotlinx.coroutines.asCoroutineDispatcher
 import org.springframework.context.annotation.Bean
@@ -10,6 +11,9 @@ import java.util.concurrent.Executors
 
 @Configuration
 class RestControllerTestConfiguration {
+
+    @Bean
+    fun applicationDate() = ApplicationDate()
 
     @Bean
     fun createGateway() = mockk<CreateOrderGateway>()

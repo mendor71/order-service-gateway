@@ -2,6 +2,7 @@ package com.mendor71.order.gateway.order
 
 import com.mendor71.order.gateway.GatewayRequestHandler
 import com.mendor71.order.gateway.OrderServiceAsyncWebClient
+import com.mendor71.order.gateway.utils.ApplicationDate
 import com.mendor71.order.model.dto.PositionDto
 import com.mendor71.order.model.dto.SalePointDto
 import com.mendor71.order.model.dto.StatusDto
@@ -17,15 +18,17 @@ import io.mockk.mockk
 import java.util.*
 
 class CreateOrderGatewayTest : StringSpec({
+    val applicationDate = ApplicationDate()
     val orderServiceClient: OrderServiceAsyncWebClient = mockk()
     val orderRequestHandler: GatewayRequestHandler<TransferOrder, CreateOrderResponse> = mockk()
 
-    val gateway = CreateOrderGateway(orderServiceClient, orderRequestHandler)
+    val gateway = CreateOrderGateway(applicationDate, orderServiceClient, orderRequestHandler)
 
     "handleRequest" {
         val response = CreateOrderResponse(1)
         val expectedGatewayResponse = GatewayResponse(
             UUID.randomUUID().toString(),
+            applicationDate.offsetDateTime(),
             GatewayRequestType.CREATE_ORDER,
             ServiceStatus.OK,
             response
