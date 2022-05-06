@@ -21,8 +21,10 @@ import kotlin.collections.HashMap
 
 @Configuration
 class KafkaAuditServiceContextConfiguration {
-    @Value("\${audit.topic}")
-    private lateinit var auditTopic: String
+    @Value("\${audit.topic.request}")
+    private lateinit var requestTopic: String
+    @Value("\${audit.topic.response}")
+    private lateinit var responseTopic: String
 
     @Bean
     fun container(): KafkaContainer {
@@ -47,7 +49,7 @@ class KafkaAuditServiceContextConfiguration {
     fun kafkaAuditService() = KafkaAuditService(testKafkaTemplate(), ObjectMapper().writer())
 
     @Bean
-    fun kafkaConsumer(): KafkaConsumer<String, String> {
+    fun kafkaRequestConsumer(): KafkaConsumer<String, String> {
         val consumer = KafkaConsumer(
             ImmutableMap.of<String, Any>(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, container().bootstrapServers,
@@ -57,7 +59,22 @@ class KafkaAuditServiceContextConfiguration {
             StringDeserializer(),
             StringDeserializer()
         )
-        consumer.subscribe(listOf(auditTopic))
+        consumer.subscribe(listOf(requestTopic))
+        return consumer
+    }
+
+    @Bean
+    fun kafkaResponseConsumer(): KafkaConsumer<String, String> {
+        val consumer = KafkaConsumer(
+            ImmutableMap.of<String, Any>(
+                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, container().bootstrapServers,
+                ConsumerConfig.GROUP_ID_CONFIG, "tc-" + UUID.randomUUID(),
+                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"
+            ),
+            StringDeserializer(),
+            StringDeserializer()
+        )
+        consumer.subscribe(listOf(responseTopic))
         return consumer
     }
 }

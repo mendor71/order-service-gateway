@@ -14,12 +14,22 @@ class KafkaAuditService(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     private val objectWriter: ObjectWriter
 ) : IAuditService {
-    @Value("\${audit.topic}")
-    private lateinit var auditTopic: String
+    @Value("\${audit.topic.request}")
+    private lateinit var auditRequestTopic: String
+    @Value("\${audit.topic.response}")
+    private lateinit var auditResponseTopic: String
     override val logger: Logger = LoggerFactory.getLogger(this::class.simpleName)
 
-    override fun logMessage(auditPoint: String, message: Any) =
-        kafkaTemplate.send(auditTopic, objectWriter.writeValueAsString(AuditMessage(auditPoint, message)))
+    override fun logRequest(auditPoint: String, message: Any) {
+        logMessage(auditRequestTopic, auditPoint, message)
+    }
+
+    override fun logResponse(auditPoint: String, message: Any) {
+        logMessage(auditResponseTopic, auditPoint, message)
+    }
+
+    private fun logMessage(topic: String, auditPoint: String, message: Any) =
+        kafkaTemplate.send(topic, objectWriter.writeValueAsString(AuditMessage(auditPoint, message)))
             .addCallback({ result ->
                 logger.debug(
                     "Sent message=[" + message + "] with offset=[" + result.recordMetadata.offset() + "]"

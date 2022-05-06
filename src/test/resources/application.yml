@@ -1,7 +1,8 @@
 audit:
   enabled: false
   topic:
-    order-service-log
+    request: order-service-request-log
+    response: order-service-response-log
   kafka:
     bootstrap-address: 127.0.0.1:9092
 

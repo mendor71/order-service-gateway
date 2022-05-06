@@ -15,6 +15,7 @@ group = "com.mendor71"
 version = "0.1.0"
 
 repositories {
+    maven(url = "https://packages.confluent.io/maven")
     mavenCentral()
     mavenLocal()
 }
@@ -27,7 +28,6 @@ val coroutinesVersion = "1.6.0"
 
 dependencies {
     implementation(group = "com.mendor71", name = "order-service-lib", version = "0.4.0")
-
     implementation(group = "org.springframework.kafka", name = "spring-kafka")
 
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-webflux")

@@ -14,7 +14,11 @@ class DummyAuditService(
 
     override val logger: Logger = LoggerFactory.getLogger(DummyAuditService::class.simpleName)
 
-    override fun logMessage(auditPoint: String, message: Any) {
+    override fun logRequest(auditPoint: String, message: Any) {
+        logger.info(objectWriter.writeValueAsString(AuditMessage(auditPoint, message)))
+    }
+
+    override fun logResponse(auditPoint: String, message: Any) {
         logger.info(objectWriter.writeValueAsString(AuditMessage(auditPoint, message)))
     }
 }

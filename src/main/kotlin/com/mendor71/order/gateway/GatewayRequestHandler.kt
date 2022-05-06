@@ -20,7 +20,7 @@ class GatewayRequestHandler<T, R : Any>(
         request: GatewayRequest<T>,
         handler: suspend (T) -> R
     ): GatewayResponse = coroutineScope {
-        auditService.logMessage("$auditPoint.REQUEST", request)
+        auditService.logRequest("$auditPoint.REQUEST", request)
 
         val response = withContext(MDCContext() + this.coroutineContext) {
             try {
@@ -32,7 +32,7 @@ class GatewayRequestHandler<T, R : Any>(
             }
         }
 
-        auditService.logMessage(
+        auditService.logResponse(
             if (response.status == ServiceStatus.OK) {
                 "$auditPoint.RESPONSE"
             } else {

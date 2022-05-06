@@ -8,6 +8,7 @@ class DummyAuditServiceTest : StringSpec({
     val auditService = DummyAuditService(ObjectMapper().writer())
 
     "logMessage" {
-        auditService.logMessage("AUDIT_POINT", "message")
+        auditService.logRequest("AUDIT_POINT", "message")
+        auditService.logResponse("AUDIT_POINT", "message")
     }
 })

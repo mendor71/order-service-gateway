@@ -24,23 +24,44 @@ class KafkaAuditServiceTest {
     lateinit var kafkaAuditService: KafkaAuditService
 
     @Autowired
-    lateinit var testKafkaConsumer: KafkaConsumer<String, String>
+    lateinit var kafkaRequestConsumer: KafkaConsumer<String, String>
+
+    @Autowired
+    lateinit var kafkaResponseConsumer: KafkaConsumer<String, String>
 
     @Test
-    fun `test logMessage`() {
-        kafkaAuditService.logMessage("TEST_AUDIT_POINT", "audit message")
+    fun `test logRequest`() {
+        kafkaAuditService.logRequest("TEST_REQUEST", "audit message")
 
         Unreliables.retryUntilTrue(10, TimeUnit.SECONDS) {
-            val records: ConsumerRecords<String, String> = testKafkaConsumer.poll(Duration.ofMillis(100))
+            val records: ConsumerRecords<String, String> = kafkaRequestConsumer.poll(Duration.ofMillis(100))
             if (records.isEmpty) {
                 return@retryUntilTrue false
             }
             assertThat(records).hasSize(1)
             assertThat(
                 records.first().value()
-            ).isEqualTo("{\"auditPoint\":\"TEST_AUDIT_POINT\",\"payload\":\"audit message\"}")
+            ).isEqualTo("{\"auditPoint\":\"TEST_REQUEST\",\"payload\":\"audit message\"}")
             true
         }
-        testKafkaConsumer.unsubscribe()
+        kafkaRequestConsumer.unsubscribe()
+    }
+
+    @Test
+    fun `test logResponse`() {
+        kafkaAuditService.logResponse("TEST_RESPONSE", "audit message")
+
+        Unreliables.retryUntilTrue(10, TimeUnit.SECONDS) {
+            val records: ConsumerRecords<String, String> = kafkaResponseConsumer.poll(Duration.ofMillis(100))
+            if (records.isEmpty) {
+                return@retryUntilTrue false
+            }
+            assertThat(records).hasSize(1)
+            assertThat(
+                records.first().value()
+            ).isEqualTo("{\"auditPoint\":\"TEST_RESPONSE\",\"payload\":\"audit message\"}")
+            true
+        }
+        kafkaResponseConsumer.unsubscribe()
     }
 }
