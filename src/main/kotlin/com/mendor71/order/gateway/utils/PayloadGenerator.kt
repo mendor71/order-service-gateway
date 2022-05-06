@@ -8,6 +8,7 @@ import com.mendor71.order.model.gateway.GatewayRequest
 import com.mendor71.order.model.gateway.GatewayRequestType
 import com.mendor71.order.model.gateway.GatewayResponse
 import com.mendor71.order.model.gateway.ServiceStatus
+import com.mendor71.order.model.gateway.order.CreateOrderResponse
 import com.mendor71.order.model.gateway.order.GetOrderResponse
 import com.mendor71.order.model.transfer.TransferOrder
 import kotlinx.coroutines.*
@@ -37,19 +38,80 @@ class PayloadGenerator(
     fun generatePayload() {
         dispatcher.asExecutor().execute {
             while (true) {
-                sendRequest()
+                sendGetRequest()
                 Thread.sleep(1000L)
             }
         }
         dispatcher.asExecutor().execute {
             while (true) {
-                sendResponse()
+                sendGetResponse()
+                Thread.sleep(1000L)
+            }
+        }
+
+        dispatcher.asExecutor().execute {
+            while (true) {
+                sendCreateRequest()
+                Thread.sleep(1000L)
+            }
+        }
+        dispatcher.asExecutor().execute {
+            while (true) {
+                sendCreateResponse()
                 Thread.sleep(1000L)
             }
         }
     }
 
-    fun sendResponse() {
+
+    fun sendGetRequest() {
+        val message = objectWriter.writeValueAsString(
+            GatewayRequest(
+                requestId = UUID.randomUUID().toString(),
+                requestTime = OffsetDateTime.now(),
+                type = GatewayRequestType.GET_ORDER,
+                body = 1L
+            )
+        )
+        kafkaTemplate.send(auditRequestTopic, message).addCallback({ result ->
+            logger.info(
+                "Sent test message $message to $auditRequestTopic with offset=[" + result.recordMetadata.offset() + "]"
+            )
+        }, { ex ->
+            logger.info(
+                "Unable to send test $auditRequestTopic message due to : " + ex.message
+            )
+        })
+    }
+
+
+    fun sendCreateRequest() {
+        val message = objectWriter.writeValueAsString(
+            GatewayRequest(
+                requestId = UUID.randomUUID().toString(),
+                requestTime = OffsetDateTime.now(),
+                type = GatewayRequestType.CREATE_ORDER,
+                body = TransferOrder(
+                    salePoint = SalePointDto(1, 1, "salePoint"),
+                    status = StatusDto(1, "Order", "NEW"),
+                    positions = listOf(
+                        PositionDto(1, 1, "iPhoneXS", 1)
+                    )
+                )
+            )
+        )
+        kafkaTemplate.send(auditRequestTopic, message).addCallback({ result ->
+            logger.info(
+                "Sent test message $message to $auditRequestTopic with offset=[" + result.recordMetadata.offset() + "]"
+            )
+        }, { ex ->
+            logger.info(
+                "Unable to send test $auditRequestTopic message due to : " + ex.message
+            )
+        })
+    }
+
+    fun sendGetResponse() {
         val message = objectWriter.writeValueAsString(
             GatewayResponse(
                 requestId = UUID.randomUUID().toString(),
@@ -78,28 +140,25 @@ class PayloadGenerator(
         })
     }
 
-    fun sendRequest() {
+    fun sendCreateResponse() {
         val message = objectWriter.writeValueAsString(
-            GatewayRequest(
+            GatewayResponse(
                 requestId = UUID.randomUUID().toString(),
-                requestTime = OffsetDateTime.now(),
-                type = GatewayRequestType.GET_ORDER,
-                body = TransferOrder(
-                    salePoint = SalePointDto(1, 1, "salePoint"),
-                    status = StatusDto(1, "Order", "NEW"),
-                    positions = listOf(
-                        PositionDto(1, 1, "iPhoneXS", 1)
-                    )
+                responseTime = OffsetDateTime.now(),
+                type = GatewayRequestType.CREATE_ORDER,
+                status = ServiceStatus.OK,
+                body = CreateOrderResponse(
+                    ordId = 1
                 )
             )
         )
-        kafkaTemplate.send(auditRequestTopic, message).addCallback({ result ->
+        kafkaTemplate.send(auditResponseTopic, message).addCallback({ result ->
             logger.info(
-                "Sent test message $message to $auditRequestTopic with offset=[" + result.recordMetadata.offset() + "]"
+                "Sent test message $message to $auditResponseTopic with offset=[" + result.recordMetadata.offset() + "]"
             )
         }, { ex ->
             logger.info(
-                "Unable to send test $auditRequestTopic message due to : " + ex.message
+                "Unable to send test to $auditResponseTopic message due to : " + ex.message
             )
         })
     }
