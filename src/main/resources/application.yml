@@ -22,5 +22,10 @@ rest:
       readTimeout: 60s
       connectionTimeout: 10s
 
+test:
+  payload:
+    generator:
+      enabled: false
+
 server:
   port: 8081

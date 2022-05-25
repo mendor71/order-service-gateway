@@ -15,6 +15,7 @@ import kotlinx.coroutines.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
@@ -22,6 +23,7 @@ import java.util.UUID
 import javax.annotation.PostConstruct
 
 @Component
+@ConditionalOnProperty(prefix = "test.payload.generator", name = ["enabled"], havingValue = "true")
 class PayloadGenerator(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     private val objectWriter: ObjectWriter,
